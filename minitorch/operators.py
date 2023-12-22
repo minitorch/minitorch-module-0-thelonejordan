@@ -125,8 +125,10 @@ def map(fn: Callable[[float], float]) -> Callable[[Iterable[float]], Iterable[fl
         A function that takes a list, applies `fn` to each element, and returns a
          new list
     """
+
     def func(ls: Iterable[float]) -> Iterable[float]:
         return (fn(x) for x in ls)
+
     return func
 
 
@@ -151,14 +153,16 @@ def zipWith(
          applying fn(x, y) on each pair of elements.
 
     """
+
     def func(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
         return (fn(x, y) for x, y in zip(ls1, ls2))
+
     return func
 
 
 def addLists(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
     "Add the elements of `ls1` and `ls2` using `zipWith` and `add`"
-    return zipWith(lambda x, y: x+y)(ls1, ls2)
+    return zipWith(lambda x, y: x + y)(ls1, ls2)
 
 
 def reduce(
@@ -176,19 +180,21 @@ def reduce(
          $x_1 \ldots x_n$ and computes the reduction :math:`fn(x_3, fn(x_2,
          fn(x_1, x_0)))`
     """
+
     def func(ls: Iterable[float]) -> float:
         ret = start
         for x in ls:
             ret = fn(x, ret)
         return ret
+
     return func
 
 
 def sum(ls: Iterable[float]) -> float:
     "Sum up a list using `reduce` and `add`."
-    return reduce(lambda x, y: x+y, 0.0)(ls)
+    return reduce(lambda x, y: x + y, 0.0)(ls)
 
 
 def prod(ls: Iterable[float]) -> float:
     "Product of a list using `reduce` and `mul`."
-    return reduce(lambda x, y: x*y, 1.0)(ls)
+    return reduce(lambda x, y: x * y, 1.0)(ls)
