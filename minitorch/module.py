@@ -31,29 +31,36 @@ class Module:
 
     def train(self) -> None:
         "Set the mode of this module and all descendent modules to `train`."
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        self.training = True
+        for m in self.modules():
+            m.training = True
 
     def eval(self) -> None:
         "Set the mode of this module and all descendent modules to `eval`."
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        self.training = False
+        for m in self.modules():
+            m.training = False
 
     def named_parameters(self) -> Sequence[Tuple[str, Parameter]]:
         """
         Collect all the parameters of this module and its descendents.
 
-
         Returns:
             The name and `Parameter` of each ancestor parameter.
         """
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        params = {}
+        def get_params(m, header=''):
+            delim = '' if header=='' else '.'
+            for k, v in m._parameters.items():
+                params[header+delim+k] = v
+            for k, v in m._modules.items():
+                get_params(v, header+delim+k)
+        get_params(self)
+        return params
 
     def parameters(self) -> Sequence[Parameter]:
         "Enumerate over all the parameters of this module and its descendents."
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        return list(self.named_parameters().values())
 
     def add_parameter(self, k: str, v: Any) -> Parameter:
         """
@@ -146,3 +153,26 @@ class Parameter:
 
     def __str__(self) -> str:
         return str(self.value)
+
+if __name__ == '__main__':
+    print("Hello World!")
+    class Module1(Module):
+        def __init__(self):
+            super(Module1, self).__init__()
+            self.w1 = Parameter(0.0)
+            self.w2 = Parameter(0.0)
+            self.b = Parameter(0.0)
+        def forward(self):
+            pass
+
+    class Module2(Module):
+        def __init__(self):
+            super(Module2, self).__init__()
+            self.m1 = Module1()
+            self.m2 = Module1()
+            self.b = Parameter(0.0)
+        def forward(self):
+            pass
+
+    m = Module2()
+    print(m)
